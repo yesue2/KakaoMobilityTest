@@ -45,6 +45,7 @@ android {
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            excludes += "DebugProbesKt.bin"
         }
     }
 }
@@ -69,4 +70,9 @@ dependencies {
 
     implementation("com.kakao.maps.open:android:2.11.1")  // 카카오맵 API 모듈
 
+    implementation("com.squareup.retrofit2:retrofit:2.11.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.11.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
+    implementation("com.airbnb.android:mavericks-compose:3.0.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0")
 }
