@@ -1,5 +1,6 @@
 package com.example.kakaomobilitytest.ui
 
+import android.content.Intent
 import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -8,15 +9,25 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.airbnb.mvrx.compose.mavericksViewModel
 import com.airbnb.mvrx.compose.collectAsState
 import com.example.kakaomobilitytest.api.Location
 import com.example.kakaomobilitytest.MainViewModel
+import com.example.kakaomobilitytest.MapActivity
 
 @Composable
 fun MainScreen(viewModel: MainViewModel = mavericksViewModel()) {
     val state by viewModel.collectAsState()
+    val context = LocalContext.current // Context를 가져옵니다.
+
+    // 경로 조회 결과가 있고, 이동 플래그가 설정되었을 때 MapActivity로 이동
+    if (state.shouldNavigateToMap) {
+        val intent = Intent(context, MapActivity::class.java)
+        context.startActivity(intent) // MapActivity로 화면 전환
+        viewModel.clearError() // 이동 후 상태 초기화
+    }
 
     when {
         state.locations.isNotEmpty() -> {

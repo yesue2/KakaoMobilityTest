@@ -10,7 +10,7 @@ import com.example.kakaomobilitytest.AppBar
 fun MainApp() {
     Scaffold(
         topBar = {
-            GlobalAppBar() // 전역적인 AppBar 설정
+            GlobalAppBar()
         },
         content = { paddingValues ->
             Column(modifier = Modifier.padding(paddingValues)) {

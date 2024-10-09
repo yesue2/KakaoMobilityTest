@@ -34,7 +34,7 @@ class MainViewModel(initialState: MainState) : MavericksViewModel<MainState>(ini
 
             if (response.isNotEmpty()) {
                 // 경로가 있으면 상태 업데이트
-                setState { copy(selectedOrigin = origin, selectedDestination = destination) }
+                setState { copy(selectedOrigin = origin, selectedDestination = destination, shouldNavigateToMap = true) }
             } else {
                 // 경로가 없으면 에러 상태 업데이트
                 setState { copy(errorCode = 4041, errorMessage = "not_found", selectedOrigin = origin, selectedDestination = destination) }
@@ -46,7 +46,7 @@ class MainViewModel(initialState: MainState) : MavericksViewModel<MainState>(ini
 
     // 에러 상태 초기화
     fun clearError() {
-        setState { copy(errorCode = null, errorMessage = null, selectedOrigin = null, selectedDestination = null) }
+        setState { copy(errorCode = null, errorMessage = null, selectedOrigin = null, selectedDestination = null, shouldNavigateToMap = false) }
     }
 
 
