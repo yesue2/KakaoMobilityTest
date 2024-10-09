@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.example.kakaomobilitytest.ui.theme.DarkColor
 
 @Composable
 fun AppBar(
@@ -28,7 +29,7 @@ fun AppBar(
     ) {
         Text(
             text = title,
-            color = Color.Black,
+            color = Color.White,
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.CenterVertically),

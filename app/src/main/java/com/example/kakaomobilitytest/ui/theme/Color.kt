@@ -18,3 +18,9 @@ val RouteDelay = Color(0xFFF7AB17)
 val RouteSlow = Color(0xFFF0D300)
 val RouteNormal = Color(0xFF3BD72C)
 val StrokeColor = Color(0xFFFFFFFF)
+
+// custom
+val DarkColor = Color(0xFF1F1F1F)
+val PointColor = Color(0xFFF8CD00)
+val BackGroundColor = Color(0xFFE1F2F8)
+

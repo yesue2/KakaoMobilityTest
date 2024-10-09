@@ -18,7 +18,7 @@ class MainActivity : ComponentActivity() {
             KakaoMobilityTestTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
+                    color = MaterialTheme.colorScheme.background,
                 ) {
                     com.example.kakaomobilitytest.ui.MainScreen()
                 }
