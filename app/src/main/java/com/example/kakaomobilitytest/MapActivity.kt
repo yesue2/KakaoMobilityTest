@@ -27,7 +27,7 @@ class MapActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         // KakaoMap SDK 초기화
-        KakaoMapSdk.init(this, "c98a502af0c6d74b1fccdd06bead5437")
+        KakaoMapSdk.init(this, BuildConfig.KAKAO_MAP_API_KEY)
 
         setContent {
             KakaoMobilityTestTheme {
