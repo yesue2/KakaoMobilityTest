@@ -1,8 +1,6 @@
 package com.example.kakaomobilitytest.ui
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -21,7 +19,9 @@ fun CustomBottomSheetScreen(
     destination: String,
     onDismiss: () -> Unit
 ) {
-    val bottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    val bottomSheetState = rememberModalBottomSheetState(
+        skipPartiallyExpanded = true
+    )
     val scope = rememberCoroutineScope()
 
     ModalBottomSheet(
@@ -30,12 +30,11 @@ fun CustomBottomSheetScreen(
             scope.launch { bottomSheetState.hide() }
             onDismiss()
         },
-        scrimColor = Color.Transparent // 배경 스크림을 투명하게 설정
+        dragHandle = { BottomSheetDefaults.DragHandle() }
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(Color(0xFFDDEEFF), shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {

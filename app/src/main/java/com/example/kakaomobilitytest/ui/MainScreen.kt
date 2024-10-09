@@ -19,18 +19,6 @@ fun MainScreen(viewModel: MainViewModel = mavericksViewModel()) {
     val state by viewModel.collectAsState()
 
     when {
-        state.errorMessage != null -> {
-            // 에러 메시지가 있을 때 다이얼로그 표시
-            CustomBottomSheetScreen(
-                errorCode = state.errorCode ?: 4041, // 상태에서 에러 코드 가져오기
-                errorMessage = state.errorMessage ?: "not_found", // 상태에서 에러 메시지 가져오기
-                origin = state.selectedOrigin ?: "",
-                destination = state.selectedDestination ?: ""
-            ) {
-                // 다이얼로그가 닫힐 때 에러 초기화
-                viewModel.clearError()
-            }
-        }
         state.locations.isNotEmpty() -> {
             LocationListScreen(
                 locations = state.locations,
@@ -40,8 +28,22 @@ fun MainScreen(viewModel: MainViewModel = mavericksViewModel()) {
             ) // 로케이션 리스트 화면 출력
             Log.d("MainScreen", "경로 있음")
         }
+
         else -> {
             Text(text = "Loading...") // 로딩 상태 처리
+        }
+    }
+
+    if (state.errorMessage != null) {
+        // 에러 메시지가 있을 때 다이얼로그 표시
+        CustomBottomSheetScreen(
+            errorCode = state.errorCode ?: 4041, // 상태에서 에러 코드 가져오기
+            errorMessage = "not_found", // 상태에서 에러 메시지 가져오기
+            origin = state.selectedOrigin ?: "",
+            destination = state.selectedDestination ?: ""
+        ) {
+            // 다이얼로그가 닫힐 때 에러 초기화
+            viewModel.clearError()
         }
     }
 }
