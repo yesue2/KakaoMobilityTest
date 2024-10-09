@@ -21,7 +21,7 @@ fun MainScreen(viewModel: MainViewModel = mavericksViewModel()) {
     when {
         state.errorMessage != null -> {
             // 에러 메시지가 있을 때 다이얼로그 표시
-            ShowErrorDialog(
+            CustomBottomSheetScreen(
                 errorCode = state.errorCode ?: 4041, // 상태에서 에러 코드 가져오기
                 errorMessage = state.errorMessage ?: "not_found", // 상태에서 에러 메시지 가져오기
                 origin = state.selectedOrigin ?: "",
@@ -39,8 +39,6 @@ fun MainScreen(viewModel: MainViewModel = mavericksViewModel()) {
                 }
             ) // 로케이션 리스트 화면 출력
             Log.d("MainScreen", "경로 있음")
-
-
         }
         else -> {
             Text(text = "Loading...") // 로딩 상태 처리
@@ -73,4 +71,5 @@ fun LocationItem(origin: String, destination: String, onClick: () -> Unit) {
         Text(text = "도착지 : $destination", color = MaterialTheme.colorScheme.primary)
         Divider(color = MaterialTheme.colorScheme.secondary, thickness = 1.dp)
     }
+
 }

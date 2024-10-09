@@ -85,4 +85,8 @@ dependencies {
     implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
     implementation("com.airbnb.android:mavericks-compose:3.0.3")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0")
+//    implementation("com.github.hannesa2:AndroidSlidingUpPanel:4.6.1")
+
+    implementation("com.composables:core:1.11.2")
+    implementation("com.composables:icons-lucide:1.0.0")
 }
