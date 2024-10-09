@@ -1,5 +1,6 @@
 package com.example.kakaomobilitytest
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -23,6 +24,7 @@ fun AppBar(
         modifier = modifier
             .fillMaxWidth()
             .height(56.dp)
+            .background(DarkColor)
             .padding(horizontal = 20.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
@@ -33,7 +35,7 @@ fun AppBar(
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.CenterVertically),
-            textAlign = TextAlign.Center,
+            textAlign = TextAlign.Start,
         )
     }
 }

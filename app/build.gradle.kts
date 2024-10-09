@@ -70,6 +70,8 @@ dependencies {
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
+    implementation("androidx.navigation:navigation-runtime-ktx:2.8.2")
+    implementation("androidx.navigation:navigation-compose:2.8.2")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
@@ -85,7 +87,6 @@ dependencies {
     implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
     implementation("com.airbnb.android:mavericks-compose:3.0.3")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.9.0")
-//    implementation("com.github.hannesa2:AndroidSlidingUpPanel:4.6.1")
 
     implementation("com.composables:core:1.11.2")
     implementation("com.composables:icons-lucide:1.0.0")
