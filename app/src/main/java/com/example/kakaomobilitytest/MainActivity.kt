@@ -20,7 +20,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    com.example.kakaomobilitytest.ui.MainScreen() // MainScreen 함수 호출
+                    com.example.kakaomobilitytest.ui.MainScreen()
                 }
             }
         }
