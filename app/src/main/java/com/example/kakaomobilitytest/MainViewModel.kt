@@ -2,9 +2,7 @@ package com.example.kakaomobilitytest
 
 import android.util.Log
 import com.airbnb.mvrx.MavericksViewModel
-import com.example.kakaomobilitytest.api.ApiClient
-import com.example.kakaomobilitytest.api.LocationResponse
-import com.example.kakaomobilitytest.api.RouteResponse
+import com.example.kakaomobilitytest.api.*
 import kotlinx.coroutines.launch
 
 class MainViewModel(initialState: MainState) : MavericksViewModel<MainState>(initialState) {
@@ -31,35 +29,43 @@ class MainViewModel(initialState: MainState) : MavericksViewModel<MainState>(ini
     // 경로 정보 가져오기
     fun getRoutes(origin: String, destination: String) = viewModelScope.launch {
         try {
-            val response: List<RouteResponse> = ApiClient.apiService.getRoutes(origin, destination)
+            Log.d("MainViewModel", "경로 조회 시작: $origin -> $destination") // 경로 조회 시작 로그
 
-            if (response.isNotEmpty()) {
-                val points = response.joinToString(" ") { it.points } // 모든 경로의 points를 하나로 병합
-                val trafficState = response.first().trafficState // 첫번째 경로의 교통 상태 사용
+            // API 응답 받기
+            val apiResponse = getRoutesResponse(origin, destination)
 
-                // 경로가 있으면 상태 업데이트
-                setState {
-                    copy(
-                        selectedOrigin = origin,
-                        selectedDestination = destination,
-                        points = points, // 경로의 points 저장
-                        trafficState = trafficState, // 교통 상태 저장
-                        shouldNavigateToMap = true // MapActivity로 이동할 준비 완료
-                    )
+            when (apiResponse) {
+                is RouteSuccessResponse -> {
+                    // 정상적인 경로 응답 처리
+                    val routeState: List<RouteState> = processRouteResponse(apiResponse.routes)
+                    Log.d("MainViewModel", "State 업데이트: 경로 조회 성공") // 상태 업데이트 로그
+                    setState {
+                        copy(
+                            selectedOrigin = origin,
+                            selectedDestination = destination,
+                            routeStates = routeState, // 경로 리스트 저장
+                            shouldNavigateToMap = true // MapActivity로 이동할 준비
+                        )
+                    }
                 }
-            } else {
-                // 경로가 없으면 에러 상태 업데이트
-                setState {
-                    copy(
-                        errorCode = 4041,
-                        errorMessage = "not_found",
-                        selectedOrigin = origin,
-                        selectedDestination = destination
-                    )
+
+                is ErrorResponse -> {
+                    // 에러 응답 처리 (예: code 4041)
+                    Log.e("MainViewModel", "경로 조회 실패: ${apiResponse.message}")
+                    setState {
+                        Log.d("MainViewModel", "State 업데이트: 경로 조회 실패") // 상태 업데이트 로그
+                        copy(
+                            errorCode = apiResponse.code,
+                            errorMessage = apiResponse.message,
+                            selectedOrigin = origin,
+                            selectedDestination = destination
+                        )
+                    }
                 }
             }
         } catch (e: Exception) {
-            // API 호출 실패 시 에러 처리
+            // 예외 처리 시 에러 로그 출력
+            Log.e("MainViewModel", "경로 조회 실패: ${e.message}")
             setState {
                 copy(
                     errorCode = 4041,
@@ -73,8 +79,18 @@ class MainViewModel(initialState: MainState) : MavericksViewModel<MainState>(ini
 
     // 에러 상태 초기화
     fun clearError() {
-        setState { copy(errorCode = null, errorMessage = null, selectedOrigin = null, selectedDestination = null, shouldNavigateToMap = false) }
+        setState {
+            Log.d("MainViewModel", "State 업데이트: 에러 초기화 -> $this") // 상태 업데이트 후 전체 state 로그
+            copy(
+                errorCode = null,
+                errorMessage = null,
+                selectedOrigin = null,
+                selectedDestination = null,
+                shouldNavigateToMap = false
+            )
+        }
     }
+}
 
 
 //    // 시간 및 거리 정보 가져오기
@@ -86,4 +102,3 @@ class MainViewModel(initialState: MainState) : MavericksViewModel<MainState>(ini
 //            setState { copy(error = e.message) } // 에러 처리
 //        }
 //    }
-}

@@ -1,6 +1,7 @@
 package com.example.kakaomobilitytest
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Box
@@ -29,6 +30,7 @@ import com.example.kakaomobilitytest.ui.theme.RouteNormal
 import com.example.kakaomobilitytest.ui.theme.RouteSlow
 import com.example.kakaomobilitytest.ui.theme.RouteUnknown
 import com.kakao.vectormap.LatLng
+import com.kakao.vectormap.route.RouteLineLayer
 import com.kakao.vectormap.route.RouteLineOptions
 import com.kakao.vectormap.route.RouteLineSegment
 import com.kakao.vectormap.route.RouteLineStyle
@@ -43,8 +45,19 @@ class MapActivity : ComponentActivity() {
         // KakaoMap SDK 초기화
         KakaoMapSdk.init(this, BuildConfig.KAKAO_MAP_API_KEY)
 
-        val points = intent.getStringExtra("points") // 경로 좌표 정보
-        val trafficState = intent.getStringExtra("trafficState") // 교통 상태 정보
+        // Intent로 받은 값들을 각각 리스트로 변환
+        val startLngList = intent.getDoubleArrayExtra("startLngList")?.toList() ?: emptyList()
+        val startLatList = intent.getDoubleArrayExtra("startLatList")?.toList() ?: emptyList()
+        val endLngList = intent.getDoubleArrayExtra("endLngList")?.toList() ?: emptyList()
+        val endLatList = intent.getDoubleArrayExtra("endLatList")?.toList() ?: emptyList()
+        val trafficStateList = intent.getStringArrayExtra("trafficStateList")?.toList() ?: emptyList()
+
+        Log.d("MapActivity", "startLngList: $startLngList")
+        Log.d("MapActivity", "startLatList: $startLatList")
+        Log.d("MapActivity", "endLngList: $endLngList")
+        Log.d("MapActivity", "endLatList: $endLatList")
+        Log.d("MapActivity", "trafficStateList: $trafficStateList")
+
 
         mapView = MapView(this) // MapView 인스턴스 생성
 
@@ -54,7 +67,7 @@ class MapActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    KakaoMapScreen(points, trafficState, mapView)
+                    KakaoMapScreen(startLngList, startLatList, endLngList, endLatList, trafficStateList, mapView)
                 }
             }
         }
@@ -101,9 +114,36 @@ class MapActivity : ComponentActivity() {
     }
 }
 
+fun addRouteToMap(kakaoMap: KakaoMap, startLngList: List<Double>, startLatList: List<Double>, endLngList: List<Double>, endLatList: List<Double>, trafficStateList: List<String>) {
+    // 1. RouteLineLayer 가져오기
+    val layer: RouteLineLayer = kakaoMap.routeLineManager!!.layer
+
+    // 2. 각 구간에 대해 좌표 리스트 생성 및 경로 추가
+    for (i in startLngList.indices) {
+        val startLatLng = LatLng.from(startLngList[i], startLatList[i])
+        val endLatLng = LatLng.from(endLngList[i], endLatList[i])
+
+        // 교통 상태에 따른 색상 가져오기
+        val trafficColor = getTrafficColor(trafficStateList[i])
+
+        // RouteLineStylesSet 생성
+        val routeLineStyles = RouteLineStyles.from(RouteLineStyle.from(16f, trafficColor))
+        val routeLineStylesSet = RouteLineStylesSet.from(routeLineStyles)
+
+        // RouteLineSegment 생성
+        val routeLineSegment = RouteLineSegment.from(listOf(startLatLng, endLatLng)).setStyles(routeLineStyles)
+
+        // RouteLineOptions 생성
+        val routeLineOptions = RouteLineOptions.from(routeLineSegment)
+            .setStylesSet(routeLineStylesSet)
+
+        // RouteLineLayer에 경로 추가
+        layer?.addRouteLine(routeLineOptions)
+    }
+}
 
 @Composable
-fun KakaoMapScreen(points: String?, trafficState: String?, mapView: MapView) {
+fun KakaoMapScreen(startLngList: List<Double>, startLatList: List<Double>, endLngList: List<Double>, endLatList: List<Double>, trafficStateList: List<String>, mapView: MapView) {
     Scaffold(
         topBar = {
             AppBar(title = "Kakao Map")
@@ -126,16 +166,13 @@ fun KakaoMapScreen(points: String?, trafficState: String?, mapView: MapView) {
                             override fun onMapError(e: Exception?) = Unit
                             override fun onMapResumed() {
                                 // 지도 준비되면 경로 추가
-                                if (points != null && trafficState != null) {
-                                    addRouteToMap(points, trafficState)
-                                }
                             }
                         },
                         object : KakaoMapReadyCallback() {
                             override fun onMapReady(kakaoMap: KakaoMap) {
                                 // 지도 준비가 완료되면 경로 데이터를 추가하는 로직
-                                if (points != null && trafficState != null) {
-                                    addRouteToMap(kakaoMap, points, trafficState)
+                                if (startLngList.isNotEmpty() && trafficStateList.isNotEmpty()) {
+                                    addRouteToMap(kakaoMap, startLngList, startLatList, endLngList, endLatList, trafficStateList)
                                 }
                             }
 
@@ -152,34 +189,6 @@ fun KakaoMapScreen(points: String?, trafficState: String?, mapView: MapView) {
             )
         }
     }
-}
-
-fun addRouteToMap(kakaoMap: KakaoMap, points: String, trafficState: String) {
-    // 1. RouteLineLayer 가져오기
-    val layer = kakaoMap.routeLineManager
-
-    // 2. 좌표 리스트로 변환 (스페이스와 콤마를 기준으로 좌표 분리)
-    val latLngList = points.split(" ").map {
-        val (lng, lat) = it.split(",")
-        LatLng.from(lng.toDouble(), lat.toDouble())
-    }
-
-    // 3. trafficState에 따른 색상 가져오기
-    val trafficColor = getTrafficColor(trafficState)
-
-    // 4. RouteLineStylesSet 생성
-    val routeLineStyles = RouteLineStyles.from(RouteLineStyle.from(16f, trafficColor))
-    val routeLineStylesSet = RouteLineStylesSet.from(routeLineStyles)
-
-    // 5. RouteLineSegment 생성
-    val routeLineSegment = RouteLineSegment.from(latLngList).setStyles(routeLineStyles)
-
-    // 6. RouteLineOptions 생성
-    val routeLineOptions = RouteLineOptions.from(routeLineSegment)
-        .setStylesSet(routeLineStylesSet)
-
-    // 7. RouteLineLayer에 경로 추가
-    layer?.addRouteLine(routeLineOptions)
 }
 
 fun getTrafficColor(trafficState: String?): Int {

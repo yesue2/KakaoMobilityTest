@@ -25,9 +25,20 @@ fun MainScreen(viewModel: MainViewModel = mavericksViewModel()) {
     if (state.shouldNavigateToMap) {
         val context = LocalContext.current
         val intent = Intent(context, MapActivity::class.java).apply {
-            putExtra("points", state.points)
-            putExtra("trafficState", state.trafficState)
+            // routeStates에서 시작점, 끝점 및 교통 상태를 추출하여 MapActivity로 전달
+            val startLngList = state.routeStates.map { it.startLng }
+            val startLatList = state.routeStates.map { it.startLat }
+            val endLngList = state.routeStates.map { it.endLng }
+            val endLatList = state.routeStates.map { it.endLat }
+            val trafficStateList = state.routeStates.map { it.state }
+
+            putExtra("startLngList", startLngList.toDoubleArray())
+            putExtra("startLatList", startLatList.toDoubleArray())
+            putExtra("endLngList", endLngList.toDoubleArray())
+            putExtra("endLatList", endLatList.toDoubleArray())
+            putExtra("trafficStateList", trafficStateList.toTypedArray())
         }
+
         context.startActivity(intent)
         viewModel.clearError()
     }
@@ -39,8 +50,7 @@ fun MainScreen(viewModel: MainViewModel = mavericksViewModel()) {
                 onLocationSelected = { origin, destination ->
                     viewModel.getRoutes(origin, destination) // 경로 조회
                 }
-            ) // 로케이션 리스트 화면 출력
-            Log.d("MainScreen", "경로 있음")
+            )
         }
 
         else -> {
@@ -48,19 +58,19 @@ fun MainScreen(viewModel: MainViewModel = mavericksViewModel()) {
         }
     }
 
+    // 에러 메시지 처리 (4041 코드 시 바텀시트 표시)
     if (state.errorMessage != null) {
-        // 에러 메시지가 있을 때 다이얼로그 표시
         CustomBottomSheetScreen(
             errorCode = state.errorCode ?: 4041, // 상태에서 에러 코드 가져오기
-            errorMessage = "not_found", // 상태에서 에러 메시지 가져오기
+            errorMessage = state.errorMessage ?: "Unknown Error", // 상태에서 에러 메시지 가져오기
             origin = state.selectedOrigin ?: "",
             destination = state.selectedDestination ?: ""
         ) {
-            // 다이얼로그가 닫힐 때 에러 초기화
             viewModel.clearError()
         }
     }
 }
+
 
 @Composable
 fun LocationListScreen(locations: List<Location>, onLocationSelected: (String, String) -> Unit) {
@@ -87,5 +97,4 @@ fun LocationItem(origin: String, destination: String, onClick: () -> Unit) {
         Text(text = "도착지 : $destination", color = MaterialTheme.colorScheme.primary)
         Divider(color = MaterialTheme.colorScheme.secondary, thickness = 1.dp)
     }
-
 }

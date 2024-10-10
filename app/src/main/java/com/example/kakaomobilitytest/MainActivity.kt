@@ -11,10 +11,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.kakaomobilitytest.ui.theme.KakaoMobilityTestTheme
 import com.example.kakaomobilitytest.ui.MainApp
+import com.google.gson.Gson
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+
         setContent {
             KakaoMobilityTestTheme {
                 Surface(
@@ -27,7 +30,6 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-
 @Composable
 @Preview(showBackground = true)
 fun MainScreenPreview() {
