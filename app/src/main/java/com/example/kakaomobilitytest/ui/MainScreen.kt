@@ -20,13 +20,16 @@ import com.example.kakaomobilitytest.MapActivity
 @Composable
 fun MainScreen(viewModel: MainViewModel = mavericksViewModel()) {
     val state by viewModel.collectAsState()
-    val context = LocalContext.current // Context를 가져옵니다.
 
-    // 경로 조회 결과가 있고, 이동 플래그가 설정되었을 때 MapActivity로 이동
+    // 경로가 있는 경우 MapActivity로 이동
     if (state.shouldNavigateToMap) {
-        val intent = Intent(context, MapActivity::class.java)
-        context.startActivity(intent) // MapActivity로 화면 전환
-        viewModel.clearError() // 이동 후 상태 초기화
+        val context = LocalContext.current
+        val intent = Intent(context, MapActivity::class.java).apply {
+            putExtra("points", state.points)
+            putExtra("trafficState", state.trafficState)
+        }
+        context.startActivity(intent)
+        viewModel.clearError()
     }
 
     when {

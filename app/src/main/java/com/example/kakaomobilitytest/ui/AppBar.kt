@@ -1,4 +1,4 @@
-package com.example.kakaomobilitytest
+package com.example.kakaomobilitytest.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
