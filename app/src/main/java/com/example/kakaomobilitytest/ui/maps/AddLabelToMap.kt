@@ -1,5 +1,6 @@
-package com.example.kakaomobilitytest
+package com.example.kakaomobilitytest.ui.maps
 
+import com.example.kakaomobilitytest.R
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.LatLng
 import com.kakao.vectormap.label.LabelLayer

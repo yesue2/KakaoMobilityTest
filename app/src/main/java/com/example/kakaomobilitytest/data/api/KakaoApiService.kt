@@ -1,5 +1,8 @@
-package com.example.kakaomobilitytest.api
+package com.example.kakaomobilitytest.data.api
 
+import com.example.kakaomobilitytest.data.model.DistanceTimeResponse
+import com.example.kakaomobilitytest.data.model.LocationResponse
+import com.example.kakaomobilitytest.data.model.RouteResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
 

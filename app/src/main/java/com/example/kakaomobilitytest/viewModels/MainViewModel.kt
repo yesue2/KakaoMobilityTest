@@ -1,8 +1,15 @@
-package com.example.kakaomobilitytest
+package com.example.kakaomobilitytest.viewModels
 
 import android.util.Log
 import com.airbnb.mvrx.MavericksViewModel
-import com.example.kakaomobilitytest.api.*
+import com.example.kakaomobilitytest.data.api.ApiClient
+import com.example.kakaomobilitytest.data.model.DistanceTimeResponse
+import com.example.kakaomobilitytest.data.model.ErrorResponse
+import com.example.kakaomobilitytest.data.model.LocationResponse
+import com.example.kakaomobilitytest.data.model.RouteState
+import com.example.kakaomobilitytest.data.model.RouteSuccessResponse
+import com.example.kakaomobilitytest.data.model.getRoutesResponse
+import com.example.kakaomobilitytest.data.model.processRouteResponse
 import kotlinx.coroutines.launch
 
 class MainViewModel(initialState: MainState) : MavericksViewModel<MainState>(initialState) {
@@ -44,7 +51,7 @@ class MainViewModel(initialState: MainState) : MavericksViewModel<MainState>(ini
                             selectedOrigin = origin,
                             selectedDestination = destination,
                             routeStates = routeState, // 경로 리스트 저장
-                            shouldNavigateToMap = true // MapActivity로 이동할 준비
+                            isNavigateToMap = true // MapActivity로 이동할 준비
                         )
                     }
                 }
@@ -86,7 +93,7 @@ class MainViewModel(initialState: MainState) : MavericksViewModel<MainState>(ini
                 errorMessage = null,
                 selectedOrigin = null,
                 selectedDestination = null,
-                shouldNavigateToMap = false
+                isNavigateToMap = false
             )
         }
     }

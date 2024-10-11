@@ -1,4 +1,4 @@
-package com.example.kakaomobilitytest.ui
+package com.example.kakaomobilitytest.ui.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -18,7 +18,7 @@ import com.example.kakaomobilitytest.ui.theme.DarkColor
 @Composable
 fun AppBar(
     modifier: Modifier = Modifier,
-    title: String = "",
+    title: String = "카카오모빌리티 2차 과제테스트",
 ) {
     Row(
         modifier = modifier

@@ -1,4 +1,4 @@
-package com.example.kakaomobilitytest.api
+package com.example.kakaomobilitytest.data.model
 
 data class DistanceTimeResponse(
     val distance: Int,    // 거리 (미터 단위)

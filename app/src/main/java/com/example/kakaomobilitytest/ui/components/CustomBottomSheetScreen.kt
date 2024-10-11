@@ -1,4 +1,4 @@
-package com.example.kakaomobilitytest.ui
+package com.example.kakaomobilitytest.ui.components
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*

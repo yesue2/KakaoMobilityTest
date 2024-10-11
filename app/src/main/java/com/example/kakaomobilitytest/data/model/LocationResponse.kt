@@ -1,4 +1,4 @@
-package com.example.kakaomobilitytest.api
+package com.example.kakaomobilitytest.data.model
 
 data class LocationResponse(
     val locations: List<Location>

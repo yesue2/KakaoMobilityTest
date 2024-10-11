@@ -1,4 +1,4 @@
-package com.example.kakaomobilitytest.ui
+package com.example.kakaomobilitytest.ui.screens
 
 import android.util.Log
 import androidx.compose.foundation.background
@@ -15,8 +15,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
-import com.example.kakaomobilitytest.addLabelToMap
-import com.example.kakaomobilitytest.addRouteToMap
+import com.example.kakaomobilitytest.ui.maps.addLabelToMap
+import com.example.kakaomobilitytest.ui.maps.addRouteToMap
+import com.example.kakaomobilitytest.ui.components.AppBar
 import com.example.kakaomobilitytest.ui.theme.DarkColor
 import com.example.kakaomobilitytest.ui.theme.PointColor
 import com.kakao.vectormap.KakaoMap
@@ -38,7 +39,7 @@ fun KakaoMapScreen(
 ) {
     Scaffold(
         topBar = {
-            AppBar(title = "Kakao Map")
+            AppBar()
         },
         modifier = Modifier
             .fillMaxSize()
@@ -74,7 +75,13 @@ fun KakaoMapScreen(
                                         endLatList,
                                         trafficStateList
                                     )
-                                    addLabelToMap(kakaoMap, startLngList[0], startLatList[0], endLngList[endLngList.size-1], endLatList[endLatList.size-1])
+                                    addLabelToMap(
+                                        kakaoMap,
+                                        startLngList[0],
+                                        startLatList[0],
+                                        endLngList[endLngList.size - 1],
+                                        endLatList[endLatList.size - 1]
+                                    )
                                 }
                             }
 
@@ -86,7 +93,7 @@ fun KakaoMapScreen(
                             }
 
                             override fun getZoomLevel(): Int {
-                                return 10 // 줌 레벨 설정
+                                return 11 // 줌 레벨 설정
                             }
                         }
                     )
@@ -104,8 +111,16 @@ fun KakaoMapScreen(
                     val timeText = convertSecondsToMinutesAndSeconds(time)
                     val distanceText = formatDistance(distance)
 
-                    Text(text = "시간:  $timeText", style = MaterialTheme.typography.bodyMedium, color = PointColor)
-                    Text(text = "거리:  $distanceText", style = MaterialTheme.typography.bodyMedium, color = PointColor)
+                    Text(
+                        text = "시간:  $timeText",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = PointColor
+                    )
+                    Text(
+                        text = "거리:  $distanceText",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = PointColor
+                    )
                 }
             }
         }

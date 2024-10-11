@@ -1,4 +1,4 @@
-package com.example.kakaomobilitytest
+package com.example.kakaomobilitytest.ui.maps
 
 import com.example.kakaomobilitytest.ui.theme.RouteBlock
 import com.example.kakaomobilitytest.ui.theme.RouteDelay

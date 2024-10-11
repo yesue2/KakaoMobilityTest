@@ -1,6 +1,7 @@
-package com.example.kakaomobilitytest.api
+package com.example.kakaomobilitytest.data.model
 
 import android.util.Log
+import com.example.kakaomobilitytest.data.api.ApiClient
 import com.google.gson.annotations.SerializedName
 
 // API 응답 형태를 정의한 sealed class

@@ -1,4 +1,4 @@
-package com.example.kakaomobilitytest.api
+package com.example.kakaomobilitytest.data.api
 
 import com.example.kakaomobilitytest.BuildConfig
 import okhttp3.Interceptor

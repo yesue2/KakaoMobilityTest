@@ -1,7 +1,6 @@
-package com.example.kakaomobilitytest.ui
+package com.example.kakaomobilitytest.ui.screens
 
 import android.content.Intent
-import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -13,19 +12,18 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.airbnb.mvrx.compose.mavericksViewModel
 import com.airbnb.mvrx.compose.collectAsState
-import com.example.kakaomobilitytest.api.Location
-import com.example.kakaomobilitytest.MainViewModel
+import com.example.kakaomobilitytest.data.model.Location
+import com.example.kakaomobilitytest.viewModels.MainViewModel
 import com.example.kakaomobilitytest.MapActivity
+import com.example.kakaomobilitytest.ui.components.CustomBottomSheetScreen
 
 @Composable
 fun MainScreen(viewModel: MainViewModel = mavericksViewModel()) {
     val state by viewModel.collectAsState()
 
-    // 경로가 있는 경우 MapActivity로 이동
-    if (state.shouldNavigateToMap) {
+    if (state.isNavigateToMap) {
         val context = LocalContext.current
         val intent = Intent(context, MapActivity::class.java).apply {
-            // routeStates에서 시작점, 끝점 및 교통 상태를 추출하여 MapActivity로 전달
             val startLngList = state.routeStates.map { it.startLng }
             val startLatList = state.routeStates.map { it.startLat }
             val endLngList = state.routeStates.map { it.endLng }
@@ -94,8 +92,6 @@ fun getErrorMessage(apiName: String, errorCode: Int?, errorMessage: String?): St
         else -> errorMessage // 에러 메시지가 있는 경우 그대로 출력
     }
 }
-
-
 
 @Composable
 fun LocationListScreen(locations: List<Location>, onLocationSelected: (String, String) -> Unit) {
