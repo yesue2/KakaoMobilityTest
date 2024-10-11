@@ -12,5 +12,7 @@ data class MainState(
     val selectedDestination: String? = null, // 선택된 도착지
     val shouldNavigateToMap: Boolean = false, // 경로 조회 후 MapActivity로 이동 여부
     // 경로에 대한 정보 (각 구간별 위도, 경도와 교통 상태를 포함한 리스트)
-    val routeStates: List<RouteState> = emptyList() // RouteState 리스트 (startLng, startLat, endLng, endLat, state)
+    val routeStates: List<RouteState> = emptyList(), // RouteState 리스트 (startLng, startLat, endLng, endLat, state)
+    val distance: Int = 0,
+    val time: Int = 0
 ) : MavericksState

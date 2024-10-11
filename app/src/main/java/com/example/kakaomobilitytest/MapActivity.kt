@@ -51,12 +51,8 @@ class MapActivity : ComponentActivity() {
         val endLngList = intent.getDoubleArrayExtra("endLngList")?.toList() ?: emptyList()
         val endLatList = intent.getDoubleArrayExtra("endLatList")?.toList() ?: emptyList()
         val trafficStateList = intent.getStringArrayExtra("trafficStateList")?.toList() ?: emptyList()
-
-        Log.d("MapActivity", "startLngList: $startLngList")
-        Log.d("MapActivity", "startLatList: $startLatList")
-        Log.d("MapActivity", "endLngList: $endLngList")
-        Log.d("MapActivity", "endLatList: $endLatList")
-        Log.d("MapActivity", "trafficStateList: $trafficStateList")
+        val distance = intent.getIntExtra("distance", 0)
+        val time = intent.getIntExtra("time", 0)
 
         mapView = MapView(this) // MapView 인스턴스 생성
 
@@ -65,8 +61,8 @@ class MapActivity : ComponentActivity() {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
-                ) {
-                    KakaoMapScreen(startLngList, startLatList, endLngList, endLatList, trafficStateList, mapView)
+                    ) {
+                    KakaoMapScreen(startLngList, startLatList, endLngList, endLatList, trafficStateList, distance, time, mapView)
                 }
             }
         }

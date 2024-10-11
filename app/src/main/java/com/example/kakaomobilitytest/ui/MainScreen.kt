@@ -31,12 +31,16 @@ fun MainScreen(viewModel: MainViewModel = mavericksViewModel()) {
             val endLngList = state.routeStates.map { it.endLng }
             val endLatList = state.routeStates.map { it.endLat }
             val trafficStateList = state.routeStates.map { it.state }
+            val distance = state.distance ?: 0
+            val time = state.time ?: 0
 
             putExtra("startLngList", startLngList.toDoubleArray())
             putExtra("startLatList", startLatList.toDoubleArray())
             putExtra("endLngList", endLngList.toDoubleArray())
             putExtra("endLatList", endLatList.toDoubleArray())
             putExtra("trafficStateList", trafficStateList.toTypedArray())
+            putExtra("distance", distance)
+            putExtra("time", time)
         }
 
         context.startActivity(intent)
@@ -49,6 +53,7 @@ fun MainScreen(viewModel: MainViewModel = mavericksViewModel()) {
                 locations = state.locations,
                 onLocationSelected = { origin, destination ->
                     viewModel.getRoutes(origin, destination) // 경로 조회
+                    viewModel.getDistanceTime(origin, destination) // 시간 및 거리 정보 조회
                 }
             )
         }
@@ -60,9 +65,13 @@ fun MainScreen(viewModel: MainViewModel = mavericksViewModel()) {
 
     // 에러 메시지 처리 (4041 코드 시 바텀시트 표시)
     if (state.errorMessage != null) {
+        // 여기에 getErrorMessage 호출 추가
+        val apiName = "경로 조회 API" // 호출된 API 이름
+        val errorMessageToShow = getErrorMessage(apiName, state.errorCode, state.errorMessage)
+
         CustomBottomSheetScreen(
             errorCode = state.errorCode ?: 4041, // 상태에서 에러 코드 가져오기
-            errorMessage = state.errorMessage ?: "Unknown Error", // 상태에서 에러 메시지 가져오기
+            errorMessage = errorMessageToShow, // 생성된 에러 메시지 사용
             origin = state.selectedOrigin ?: "",
             destination = state.selectedDestination ?: ""
         ) {
@@ -70,6 +79,22 @@ fun MainScreen(viewModel: MainViewModel = mavericksViewModel()) {
         }
     }
 }
+
+fun getErrorMessage(apiName: String, errorCode: Int?, errorMessage: String?): String {
+    return when {
+        errorMessage?.contains("Unable to resolve host") == true -> {
+            "네트워크 연결을 확인해주세요." // 네트워크 문제에 대한 간략한 메시지
+        }
+        errorMessage.isNullOrEmpty() -> {
+            when (errorCode) {
+                null -> "$apiName API에서 에러가 발생했습니다." // 에러 코드와 메시지가 없는 경우 API 이름 표시
+                else -> "$apiName API에서 에러가 발생했습니다. (코드: $errorCode)"
+            }
+        }
+        else -> errorMessage // 에러 메시지가 있는 경우 그대로 출력
+    }
+}
+
 
 
 @Composable

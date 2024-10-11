@@ -90,15 +90,14 @@ class MainViewModel(initialState: MainState) : MavericksViewModel<MainState>(ini
             )
         }
     }
+
+    fun getDistanceTime(origin: String, destination: String) = viewModelScope.launch {
+        try {
+            val response: DistanceTimeResponse =
+                ApiClient.apiService.getDistanceTime(origin, destination)
+            setState { copy(distance = response.distance, time = response.time) } // 시간과 거리 상태 업데이트
+        } catch (e: Exception) {
+            setState { copy(errorMessage = e.message) }
+        }
+    }
 }
-
-
-//    // 시간 및 거리 정보 가져오기
-//    fun getDistanceTime(origin: String, destination: String) = viewModelScope.launch {
-//        try {
-//            val response = ApiClient.apiService.getDistanceTime(origin, destination)
-//            setState { copy(distance = response.distance, time = response.time) } // 시간과 거리 상태 업데이트
-//        } catch (e: Exception) {
-//            setState { copy(error = e.message) } // 에러 처리
-//        }
-//    }

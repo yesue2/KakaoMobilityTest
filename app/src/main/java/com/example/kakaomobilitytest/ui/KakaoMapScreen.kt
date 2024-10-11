@@ -1,16 +1,24 @@
 package com.example.kakaomobilitytest.ui
 
 import android.util.Log
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.example.kakaomobilitytest.addLabelToMap
 import com.example.kakaomobilitytest.addRouteToMap
+import com.example.kakaomobilitytest.ui.theme.DarkColor
+import com.example.kakaomobilitytest.ui.theme.PointColor
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
 import com.kakao.vectormap.LatLng
@@ -24,6 +32,8 @@ fun KakaoMapScreen(
     endLngList: List<Double>,
     endLatList: List<Double>,
     trafficStateList: List<String>,
+    distance: Int,
+    time: Int,
     mapView: MapView
 ) {
     Scaffold(
@@ -80,8 +90,41 @@ fun KakaoMapScreen(
                             }
                         }
                     )
+
                 }
             )
+            Box(
+                modifier = Modifier
+                    .align(Alignment.BottomEnd) // 오른쪽 하단에 정렬
+                    .padding(16.dp) // 화면 가장자리로부터 패딩
+                    .background(DarkColor) // 배경색
+                    .padding(20.dp) // 내부 패딩
+            ) {
+                Column {
+                    val timeText = convertSecondsToMinutesAndSeconds(time)
+                    val distanceText = formatDistance(distance)
+
+                    Text(text = "시간:  $timeText", style = MaterialTheme.typography.bodyMedium, color = PointColor)
+                    Text(text = "거리:  $distanceText", style = MaterialTheme.typography.bodyMedium, color = PointColor)
+                }
+            }
         }
+    }
+}
+
+fun convertSecondsToMinutesAndSeconds(seconds: Int): String {
+    val minutes = seconds / 60
+    val remainingSeconds = seconds % 60
+    return "$minutes 분 $remainingSeconds 초"
+}
+
+fun formatDistance(distance: Int): String {
+    return if (distance >= 1000) {
+        val kilometers = distance / 1000
+        val meters = distance % 1000
+        if (meters == 0) "$kilometers km"
+        else "$kilometers.$meters km"
+    } else {
+        "$distance m"
     }
 }
