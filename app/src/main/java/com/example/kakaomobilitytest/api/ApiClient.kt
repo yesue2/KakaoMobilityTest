@@ -10,7 +10,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 object ApiClient {
     // Retrofit 인스턴스를 필요할 때 한 번만 생성
     private val retrofit: Retrofit by lazy {
-        Retrofit.Builder().baseUrl("https://taxi-openapi.sandbox.onkakao.net/api/v1/")
+        Retrofit.Builder().baseUrl("https://taxi-openapi.sandbox.onkakao.net/api/v1/coding-assignment/")
             .addConverterFactory(GsonConverterFactory.create()) // JSON 응답을 파싱할 수 있도록 Gson 변환기 추가
             .client(provideOkHttpClient()) // OkHttpClient 추가 (로깅 및 기타 설정 포함)
             .build()
