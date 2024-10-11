@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.viewinterop.AndroidView
 import com.example.kakaomobilitytest.ui.theme.RouteBlock
@@ -91,7 +92,7 @@ fun KakaoMapScreen(
                             }
 
                             override fun getZoomLevel(): Int {
-                                return 15 // 줌 레벨 설정
+                                return 10 // 줌 레벨 설정
                             }
                         }
                     )
@@ -108,79 +109,60 @@ fun addRouteToMap(
     endLngList: List<Double>,
     endLatList: List<Double>,
     trafficStateList: List<String>
-)  {
+) {
     // 1. RouteLineLayer 가져오기
     val routeLineManager = kakaoMap.routeLineManager
     val layer: RouteLineLayer? = routeLineManager?.layer
 
-    val stylesSet: RouteLineStylesSet = RouteLineStylesSet.from(
-        "JaonStyles",
-        RouteLineStyles.from(RouteLineStyle.from(16f, RouteJam.toArgb()))
-    )
-    val segment = RouteLineSegment.from(
-        Arrays.asList(
-            LatLng.from(37.55595957732287, 126.97227318174524),
-            LatLng.from(37.55584147066708, 126.97216162420102)
-        )
-    ).setStyles(stylesSet.getStyles(0))
+    // 2. RouteLineStylesSet 생성
+    val stylesSet = createRouteLineStylesSet()
 
-    val options: RouteLineOptions = RouteLineOptions.from(segment).setStylesSet(stylesSet)
+    // 3. 각 구간에 대해 RouteLineSegment 생성 및 경로 추가
+    val segments = mutableListOf<RouteLineSegment>()
+
+    for (i in startLngList.indices) {
+        val startLatLng = LatLng.from(startLatList[i], startLngList[i])
+        val endLatLng = LatLng.from(endLatList[i], endLngList[i])
+
+        // 교통 상태에 따른 스타일 인덱스 가져오기
+        val styleIndex = getStyleIndex(trafficStateList[i])
+
+        // RouteLineSegment 생성 및 스타일 적용
+        val segment = RouteLineSegment.from(listOf(startLatLng, endLatLng))
+            .setStyles(stylesSet.getStyles(styleIndex))
+
+        segments.add(segment)
+    }
+
+    // 4. RouteLineOptions 생성
+    val options = RouteLineOptions.from(segments).setStylesSet(stylesSet)
+
+    // 5. RouteLineLayer에 경로 추가
     layer?.addRouteLine(options)
-
-//    val styleUnknown = RouteLineStyles.from(RouteLineStyle.from(16f, RouteUnknown.toArgb()))
-//    val styleJam = RouteLineStyles.from(RouteLineStyle.from(16f, RouteJam.toArgb()))
-//    val styleDelay = RouteLineStyles.from(RouteLineStyle.from(16f, RouteDelay.toArgb()))
-//    val styleNormal = RouteLineStyles.from(RouteLineStyle.from(16f, RouteNormal.toArgb()))
-//    val styleBlock = RouteLineStyles.from(RouteLineStyle.from(16f, RouteBlock.toArgb()))
-//
-//    val stylesSet: RouteLineStylesSet = RouteLineStylesSet.from(styleUnknown, styleJam, styleDelay, styleNormal, styleBlock)
-
-
-///////////////////////////////////////////////
-//    // 2. 각 구간에 대해 좌표 리스트 생성 및 경로 추가
-//    val segments = mutableListOf<RouteLineSegment>()
-//    for (i in startLngList.indices) {
-//        val startLatLng = LatLng.from(startLngList[i], startLatList[i])
-//        val endLatLng = LatLng.from(endLngList[i], endLatList[i])
-//
-//        // 교통 상태에 따른 색상 가져오기
-//        val trafficColor = getTrafficColor(trafficStateList[i])
-//
-//        // RouteLineSegment 생성 및 스타일 설정
-//        val routeLineStyles = RouteLineStyles.from(RouteLineStyle.from(16f, trafficColor))
-//        val routeLineSegment =
-//            RouteLineSegment.from(listOf(startLatLng, endLatLng)).setStyles(routeLineStyles)
-//
-//        segments.add(routeLineSegment)
-//    }
-//
-//    // 3. 멀티스타일 RouteLineStylesSet 생성
-//    val routeLineStylesSet = RouteLineStylesSet.from(
-//        RouteLineStyles.from(RouteLineStyle.from(16f, RouteJam.toArgb())),
-//        RouteLineStyles.from(
-//            RouteLineStyle.from(
-//                20f,
-//                RouteDelay.toArgb(),
-//                1f,
-//                RouteNormal.toArgb()
-//            )
-//        )
-//    )
-//
-//    val options = RouteLineOptions.from(segments).setStylesSet(routeLineStylesSet)
-//    // 4. RouteLineOptions 생성 및 RouteLine 추가
-//    val routeLineOptions = RouteLineOptions.from(segments).setStylesSet(routeLineStylesSet)
-//    layer?.addRouteLine(routeLineOptions)
 }
 
-fun getTrafficColor(trafficState: String?): Int {
-    return when (trafficState) {
-        "UNKNOWN" -> RouteUnknown.toArgb()
-        "JAM" -> RouteJam.toArgb()
-        "DELAY" -> RouteDelay.toArgb()
-        "SLOW" -> RouteSlow.toArgb()
-        "NORMAL" -> RouteNormal.toArgb()
-        "BLOCK" -> RouteBlock.toArgb()
-        else -> RouteUnknown.toArgb()
-    }
+fun createRouteLineStylesSet(): RouteLineStylesSet {
+    val unknownStyle = RouteLineStyles.from(RouteLineStyle.from(16f, RouteUnknown))
+    val jamStyle = RouteLineStyles.from(RouteLineStyle.from(16f, RouteJam))
+    val delayStyle = RouteLineStyles.from(RouteLineStyle.from(16f, RouteDelay))
+    val slowStyle = RouteLineStyles.from(RouteLineStyle.from(16f, RouteSlow))
+    val normalStyle = RouteLineStyles.from(RouteLineStyle.from(16f, RouteNormal))
+    val blockStyle = RouteLineStyles.from(RouteLineStyle.from(16f, RouteNormal))
+
+    return RouteLineStylesSet.from(
+        "TrafficStyles",
+        unknownStyle, jamStyle, delayStyle, slowStyle, normalStyle, blockStyle
+    )
+}
+
+fun getStyleIndex(trafficState: String): Int {
+    return when (trafficState.trim().uppercase()) {
+        "UNKNOWN" -> 0
+        "JAM" -> 1
+        "DELAY" -> 2
+        "SLOW" -> 3
+        "NORMAL" -> 4
+        "BLOCK" -> 5
+        else -> 0
+    }.also { Log.d("TrafficStyle", "Traffic State: $trafficState, Style Index: $it") }
 }

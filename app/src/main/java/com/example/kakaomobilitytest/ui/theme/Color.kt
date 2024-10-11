@@ -11,13 +11,13 @@ val PurpleGrey40 = Color(0xFF625b71)
 val Pink40 = Color(0xFF7D5260)
 
 // kakaoMobility
-val RouteUnknown = Color(0x7E7F7E79)
-val RouteBlock = Color(0xFFFD382A)
-val RouteJam = Color(0xFFFD382A)
-val RouteDelay = Color(0xFFF7AB17)
-val RouteSlow = Color(0xFFF0D300)
-val RouteNormal = Color(0xFF3BD72C)
-val StrokeColor = Color(0xFFFFFFFF)
+val RouteUnknown = 0xE67F7E79.toInt()
+val RouteBlock = 0xFFFD382A.toInt()
+val RouteJam = 0xFFFD382A.toInt()
+val RouteDelay = 0xFFF7AB17.toInt()
+val RouteSlow = 0xFFF0D300.toInt()
+val RouteNormal = 0xFF3BD72C.toInt()
+val StrokeColor = 0xFFFFFFFF.toInt()
 
 // custom
 val DarkColor = Color(0xFF1F1F1F)
