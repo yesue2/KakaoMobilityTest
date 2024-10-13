@@ -50,8 +50,8 @@ fun MainScreen(viewModel: MainViewModel = mavericksViewModel()) {
             LocationListScreen(
                 locations = state.locations,
                 onLocationSelected = { origin, destination ->
-                    viewModel.getRoutes(origin, destination) // 경로 조회
-                    viewModel.getDistanceTime(origin, destination) // 시간 및 거리 정보 조회
+                    viewModel.fetchRoutes(origin, destination) // 경로 조회
+                    viewModel.fetchDistanceTime(origin, destination) // 시간 및 거리 정보 조회
                 }
             )
         }

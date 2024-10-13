@@ -12,14 +12,12 @@ interface KakaoApiService {
 
     @GET("routes")
     suspend fun getRoutes(
-        @Query("origin") origin: String,
-        @Query("destination") destination: String
+        @Query("origin") origin: String, @Query("destination") destination: String
     ): List<RouteResponse>
 
     @GET("distance-time")
     suspend fun getDistanceTime(
-        @Query("origin") origin: String,
-        @Query("destination") destination: String
+        @Query("origin") origin: String, @Query("destination") destination: String
     ): DistanceTimeResponse
 }
 
