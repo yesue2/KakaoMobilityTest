@@ -57,7 +57,6 @@ fun processRouteResponse(routeResponses: List<RouteResponse>): List<RouteState> 
     routeResponses.forEach { routeResponse ->
         val pointList = routeResponse.points.split(" ")
 
-        // 두 좌표씩 짝지어서 처리
         for (i in 0 until pointList.size - 1) {
             val (startLng, startLat) = pointList[i].split(",").map { it.toDouble() }
             val (endLng, endLat) = pointList[i + 1].split(",").map { it.toDouble() }
