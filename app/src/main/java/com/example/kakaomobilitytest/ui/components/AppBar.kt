@@ -23,7 +23,7 @@ fun AppBar(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .height(56.dp)
+            .height(65.dp)
             .background(DarkColor)
             .padding(horizontal = 20.dp),
         horizontalArrangement = Arrangement.SpaceBetween,

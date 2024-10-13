@@ -30,30 +30,27 @@ data class RouteState(
     val state: String
 )
 
-// 실제 API 호출 함수에서 응답을 처리
-suspend fun getRoutesResponse(origin: String, destination: String): ApiResponse {
-    try {
-        // API 호출
-        val response = ApiClient.apiService.getRoutes(origin, destination)
+성// 기존 getRoutesResponse 함수 개선
+fun parseRouteResponse(response: List<RouteResponse>): List<RouteState> {
+    return response.map { routeResponse ->
+        val pointList = routeResponse.points.split(" ")
 
-        // 응답 데이터에 따라 처리
-        return if (response is List<*>) {
-            val routeResponses = response.filterIsInstance<RouteResponse>() // 경로가 있는 정상 응답
-            RouteSuccessResponse(routeResponses)
-        } else {
-            // 경로가 없을 때의 에러 응답
-            val errorResponse = response as Map<String, Any>
-            val code = errorResponse["code"] as? Int ?: 0
-            val message = errorResponse["message"] as? String ?: "Unknown error"
-            ErrorResponse(code, message)
+        // 두 좌표씩 짝지어서 처리
+        pointList.chunked(2).map {
+            val (startLng, startLat) = it[0].split(",").map { it.toDouble() }
+            val (endLng, endLat) = it[1].split(",").map { it.toDouble() }
+
+            RouteState(
+                startLng = startLng,
+                startLat = startLat,
+                endLng = endLng,
+                endLat = endLat,
+                state = routeResponse.trafficState
+            )
         }
-    } catch (e: Exception) {
-        Log.e("API Error", e.message ?: "Unknown error")
-        return ErrorResponse(500, e.message ?: "Unknown error")
-    }
+    }.flatten()
 }
 
-// RouteResponse 처리 로직
 fun processRouteResponse(routeResponses: List<RouteResponse>): List<RouteState> {
     val routeStates = mutableListOf<RouteState>()
 
