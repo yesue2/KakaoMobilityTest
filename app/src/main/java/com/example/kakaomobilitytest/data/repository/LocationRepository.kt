@@ -1,11 +1,13 @@
 package com.example.kakaomobilitytest.data.repository
 
+import android.util.Log
 import com.example.kakaomobilitytest.data.api.ApiClient
 import com.example.kakaomobilitytest.data.model.ApiResponse
 import com.example.kakaomobilitytest.data.model.DistanceTimeResponse
 import com.example.kakaomobilitytest.data.model.ErrorResponse
 import com.example.kakaomobilitytest.data.model.LocationResponse
 import com.example.kakaomobilitytest.data.model.RouteResponse
+import com.example.kakaomobilitytest.data.model.RouteState
 import com.example.kakaomobilitytest.data.model.RouteSuccessResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -47,4 +49,30 @@ class LocationRepository {
             }
         }
     }
+}
+
+fun processRouteResponse(routeResponses: List<RouteResponse>): List<RouteState> {
+    val routeStates = mutableListOf<RouteState>()
+
+    routeResponses.forEach { routeResponse ->
+        val pointList = routeResponse.points.split(" ")
+
+        // 두 좌표씩 짝지어서 처리
+        for (i in 0 until pointList.size - 1) {
+            val (startLng, startLat) = pointList[i].split(",").map { it.toDouble() }
+            val (endLng, endLat) = pointList[i + 1].split(",").map { it.toDouble() }
+            Log.d("TrafficState", "traffic_state: ${routeResponse.trafficState}")
+
+            val routeState = RouteState(
+                startLng = startLng,
+                startLat = startLat,
+                endLng = endLng,
+                endLat = endLat,
+                state = routeResponse.trafficState
+            )
+            routeStates.add(routeState)
+        }
+    }
+
+    return routeStates
 }

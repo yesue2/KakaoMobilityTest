@@ -7,8 +7,8 @@ import com.example.kakaomobilitytest.MapActivity
 import com.example.kakaomobilitytest.data.model.ErrorResponse
 import com.example.kakaomobilitytest.data.model.RouteState
 import com.example.kakaomobilitytest.data.model.RouteSuccessResponse
-import com.example.kakaomobilitytest.data.model.processRouteResponse
 import com.example.kakaomobilitytest.data.repository.LocationRepository
+import com.example.kakaomobilitytest.data.repository.processRouteResponse
 import kotlinx.coroutines.launch
 
 class MainViewModel(initialState: MainState) : MavericksViewModel<MainState>(initialState) {
