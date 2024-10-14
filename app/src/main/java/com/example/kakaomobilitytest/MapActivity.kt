@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import com.example.kakaomobilitytest.ui.screens.KakaoMapScreen
+import com.example.kakaomobilitytest.ui.screens.MapScreen
 import com.example.kakaomobilitytest.ui.theme.KakaoMobilityTestTheme
 import com.kakao.vectormap.MapView
 import com.kakao.vectormap.KakaoMapSdk
@@ -31,15 +31,21 @@ class MapActivity : ComponentActivity() {
 
         setContent {
             KakaoMobilityTestTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                    ) {
-                    KakaoMapScreen(startLngList, startLatList, endLngList, endLatList, trafficStateList, distance, time, mapView)
-                }
+                MapScreen(
+                    startLngList,
+                    startLatList,
+                    endLngList,
+                    endLatList,
+                    trafficStateList,
+                    distance,
+                    time,
+                    mapView
+                )
+
             }
         }
     }
+
     override fun onResume() {
         super.onResume()
         mapView.resume()

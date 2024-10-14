@@ -43,6 +43,7 @@ class MainViewModel(initialState: MainState) : MavericksViewModel<MainState>(ini
                         )
                     }
                 }
+
                 is ErrorResponse -> {
                     setState {
                         copy(
@@ -81,7 +82,12 @@ class MainViewModel(initialState: MainState) : MavericksViewModel<MainState>(ini
     fun fetchDistanceTime(origin: String, destination: String) = viewModelScope.launch {
         try {
             val response = repository.getDistanceTime(origin, destination)
-            setState { copy(distance = response.distance, time = response.time) }
+            setState {
+                copy(
+                    distance = response.distance,
+                    time = response.time
+                )
+            }
         } catch (e: Exception) {
             setState { copy(errorMessage = e.message) }
         }

@@ -24,22 +24,9 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             KakaoMobilityTestTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = DarkColor,
-                ) {
-                    Scaffold(
-                        topBar = {
-                            AppBar()
-                        },
-                        content = { paddingValues ->
-                            Column(modifier = Modifier.padding(paddingValues)) {
-                                MainScreen(mainViewModel)
-                            }
-                        }
-                    )
-                }
+                MainScreen(mainViewModel)
             }
         }
     }
 }
+

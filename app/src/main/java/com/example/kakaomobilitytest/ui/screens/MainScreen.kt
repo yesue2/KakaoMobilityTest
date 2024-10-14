@@ -1,18 +1,24 @@
 package com.example.kakaomobilitytest.ui.screens
 
 import android.content.Intent
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import com.airbnb.mvrx.compose.collectAsState
 import com.airbnb.mvrx.compose.mavericksViewModel
 import com.example.kakaomobilitytest.MapActivity
 import com.example.kakaomobilitytest.Utils.getErrorMessage
+import com.example.kakaomobilitytest.ui.components.AppBar
 import com.example.kakaomobilitytest.ui.components.BottomSheet
 import com.example.kakaomobilitytest.ui.components.List
 import com.example.kakaomobilitytest.viewModels.MainViewModel
+import java.util.logging.ErrorManager
 
 @Composable
 fun MainScreen(viewModel: MainViewModel = mavericksViewModel()) {
@@ -44,32 +50,41 @@ fun MainScreen(viewModel: MainViewModel = mavericksViewModel()) {
         }
     }
 
-    when {
-        state.locations.isNotEmpty() -> {
-            List(
-                locations = state.locations,
-                onLocationSelected = { origin, destination ->
-                    viewModel.fetchRoutes(origin, destination)
-                    viewModel.fetchDistanceTime(origin, destination)
+    Scaffold(
+        topBar = {
+            AppBar()
+        },
+        content = { paddingValues ->
+            Column(modifier = Modifier.padding(paddingValues)) {
+                when {
+                    state.locations.isNotEmpty() -> {
+                        List(
+                            locations = state.locations,
+                            onLocationSelected = { origin, destination ->
+                                viewModel.fetchRoutes(origin, destination)
+                                viewModel.fetchDistanceTime(origin, destination)
+                            }
+                        )
+                    }
+                    else -> {
+                        Text(text = "Loading...")
+                    }
                 }
-            )
-        }
-        else -> {
-            Text(text = "Loading...")
-        }
-    }
 
-    if (state.errorMessage != null) {
-        val apiName = "경로 조회 API"
-        val errorMessageToShow = getErrorMessage(apiName, state.errorCode, state.errorMessage)
+                if (state.errorMessage != null) {
+                    val apiName = "경로 조회 API"
+                    val errorMessageToShow = getErrorMessage(apiName, state.errorCode, state.errorMessage)
 
-        BottomSheet(
-            state.errorCode ?: 4041,
-            errorMessageToShow,
-            state.selectedOrigin ?: "",
-            state.selectedDestination ?: ""
-        ) {
-            viewModel.clearError()
+                    BottomSheet(
+                        state.errorCode ?: 4041,
+                        errorMessageToShow,
+                        state.selectedOrigin ?: "",
+                        state.selectedDestination ?: ""
+                    ) {
+                        viewModel.clearError()
+                    }
+                }
+            }
         }
-    }
+    )
 }

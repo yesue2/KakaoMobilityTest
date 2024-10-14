@@ -1,3 +1,22 @@
+# Kakao Mobility Test Application
+
+## 프로젝트 개요
+
+이 프로젝트는 사용자가 출발지와 도착지를 선택하여 경로를 조회하고, 해당 경로에 대한 교통 정보를 지도에 표시하는 Android 애플리케이션입니다. **Kakao Mobility API**를 사용하여 경로 정보를 제공하고, **Jetpack Compose**를 사용한 UI와 **Mavericks**를 활용한 상태 관리를 구현했습니다.
+
+---
+
+## 기술 스택
+
+- **언어**: Kotlin
+- **UI 프레임워크**: Jetpack Compose
+- **상태 관리**: Mavericks (ViewModel 및 상태 관리)
+- **네트워크**: Retrofit
+- **지도 API**: Kakao Map SDK
+- **의존성 관리**: Gradle
+
+---
+
 ## ApiClient에서 Retrofit을 싱글톤으로 제공
 
 ## 목록을 보여줄 때 LazyColumn 사용해 화면에 표시되는 항목만 렌더링해 성능을 최적화
