@@ -1,4 +1,4 @@
-# Kakao Mobility Test Application
+# Kakao Map Application
 
 ## 💻 프로젝트 개요
 
