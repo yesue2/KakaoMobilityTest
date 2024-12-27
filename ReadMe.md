@@ -107,6 +107,11 @@
 ## ⚙️ 기능
 
 - **출발지 및 도착지 선택**: 사용자가 선택한 출발지와 도착지에 따라 경로 조회
+<img width="503" alt="image" src="https://github.com/user-attachments/assets/e705173c-ff78-4dc1-bed6-a05e0c071db5" />
+
 - **실시간 경로 표시**: 경로 조회 결과를 실시간 교통 정보를 반영해 지도에 표시
 - **거리 및 시간 정보 표시**: 경로 조회 후 이동 거리와 예상 소요 시간 표시
+<img width="503" alt="image" src="https://github.com/user-attachments/assets/fa7aa582-3e1a-4a80-9051-1f443a164343" />
+
 - **에러 처리**: API 호출 중 발생하는 에러를 **BottomSheet**를 통해 사용자에게 알림
+<img width="503" alt="image" src="https://github.com/user-attachments/assets/231e28c2-71d9-4d19-919d-702b5e4b8e0f" />
